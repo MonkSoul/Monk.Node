@@ -21,6 +21,8 @@ var coreRoute = require(path.join(__dirname, 'core', 'route'));
 var cookieParser = require('cookie-parser');
 // session
 var session = require('express-session');
+// cors
+var cors = require('cors');
 
 // 视图加载
 app.set('views', path.join(__dirname, 'views'));
@@ -31,7 +33,7 @@ var accessLogDirectory = __dirname + '/logs/access';
 fs.existsSync(accessLogDirectory) || fs.mkdirSync(accessLogDirectory);
 var errorLogDirectory = __dirname + '/logs/error';
 fs.existsSync(errorLogDirectory) || fs.mkdirSync(errorLogDirectory);
-
+// 保存访问日志
 var accessLogStream = fileStreamRotator.getStream({
     filename: accessLogDirectory + '/access-%DATE%.log',
     frequency: 'daily',
@@ -40,6 +42,9 @@ var accessLogStream = fileStreamRotator.getStream({
 app.use(logger('combined', { stream: accessLogStream }));
 // 设置错误日志文件地址
 var errorLogStream = fs.createWriteStream(errorLogDirectory + '/error.log', { 'flags': 'a' });
+
+// 跨域支持
+app.use(cors());
 
 // 设置静态资源目录
 app.use(express.static(path.join(__dirname, 'assets')));
@@ -86,13 +91,13 @@ app.get("/", defautAction.get_index);
 
 // 错误处理
 // 404处理
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
 // 错误或者服务器500异常处理
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     // 默认指定的是views/share/error.ejs
     res.render('share/error', {
@@ -103,7 +108,7 @@ app.use(function(err, req, res, next) {
 
 // 设置端口
 app.set('port', process.env.PORT || 3000);
-var server = app.listen(app.get('port'), function() {
+var server = app.listen(app.get('port'), function () {
     var host = server.address().address;
     var port = server.address().port;
     console.log('启动成功！访问地址： http://%s:%s', host, port);

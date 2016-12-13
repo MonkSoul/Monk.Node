@@ -26,6 +26,7 @@
 - 集成强大的Nodejs数据库ORM组件：Sequelize.js，支持目前所有主流数据库
 - 集成强大的ejs模板引擎
 - 支持日志记录，日志输出
+- 支持跨域
 - 支持typescript编写
 - 支持Session，Cookies会话操作
 - 支持RESTful API开发
@@ -35,6 +36,7 @@
 - 支持文件上传
 - 支持数据库表模型生成工具
 - 支持开发、测试、生成环境数据库切换
+- 安全性高，防止CSURF攻击
 - 拓展性强，完美支持Node.js原生模块
 - 更多强大功能后续陆续集成
 
@@ -44,6 +46,8 @@
 
 ============ 2016.12.13 V2.0.1 ============
 
+- [新增] cors跨域支持
+- [新增] 防止csurf攻击支持，提供更安全的开发环境
 - [新增] typescript 支持，可以用typescript开发nodejs模块
 - [新增] logs/access和logs/error 用于保存日志记录
 - [新增] 写入访问日志功能
@@ -52,7 +56,8 @@
 - [新增] 支持日志写入文件和写入数据库功能
 - [新增] package.json模块依赖 file-stream-rotator
 - [优化] app.js 入口文件，提高访问性能
-- [更新] 控制台日志输出为combined，之前版本为dev 
+- [更新] 控制台日志输出为combined，之前版本为dev
+- [更新] 开发文档，新增防止CSURF攻击示例
 
 ============ 2016.12.10 V2.0.0 ============
 
@@ -830,6 +835,50 @@ exports.listen = function (server) {
 </script>
 ```
 
+### 防止csurf攻击
+
+- 服务端
+
+```
+var csrf = require('csurf');
+var csrfProtection = csrf({ cookie: true });
+module.exports={
+    post_login:[csrfProtection,function(req,res){
+        res.send("ok",{ csrfToken: req.csrfToken() });
+    }]
+};
+```
+
+- 客户端
+
+```
+<form action="/process" method="POST">
+  <input type="hidden" name="_csrf" value="{{csrfToken}}">
+  
+  Favorite color: <input type="text" name="favoriteColor">
+  <button type="submit">Submit</button>
+</form>
+```
+
+### 生成环境部署
+
+- 安装pm2
+
+```
+$ npm install pm2 -g |
+
+$ pm2 start app.js
+```
+
+- 设置随机启动
+
+```
+$ npm install pm2-windows-startup -g
+
+$ pm2-startup install
+
+$ pm2 save
+```
 
 ## 友情捐赠
 
