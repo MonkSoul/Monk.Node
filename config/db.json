@@ -1,0 +1,38 @@
+{
+    "development": {
+        "username": "sa",
+        "password": "000000",
+        "database": "monk_node",
+        "host": "MONKSOUL",
+        "dialect": "mssql",
+        "output": "../models",
+        "additional": {
+            "timestamps": false,
+            "freezeTableName": true
+        }
+    },
+    "test": {
+        "username": "sa",
+        "password": "000000",
+        "database": "monk_node",
+        "host": "MONKSOUL",
+        "dialect": "mssql",
+        "output": "../models",
+        "additional": {
+            "timestamps": false,
+            "freezeTableName": true
+        }
+    },
+    "production": {
+        "username": "sa",
+        "password": "000000",
+        "database": "monk_node",
+        "host": "MONKSOUL",
+        "dialect": "mssql",
+        "output": "../models",
+        "additional": {
+            "timestamps": false,
+            "freezeTableName": true
+        }
+    }
+}

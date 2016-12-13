@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>即时通讯</title>
+</head>
+
+<body>
+
+  <h1>这里是即时通讯测试案例，<br />可以用不同浏览器打开：http://localhost:3000/frontend/socket 进行聊天</h1>
+  <br />
+  <a href="/">返回首页</a>
+  <br />
+  <br />
+  <br />
+  姓名：<input type="text" id="name" name="name" />
+  <br />
+  <br /> 内容：
+  <input type="text" id="msg" name="msg" />
+  <br />
+  <br />
+  <input type="button" value="发送" id="send" />
+  <br />
+  <br />
+  <h3>聊天记录</h3>
+  <div id="list">
+
+  </div>
+  <!-- 引入客户端脚本 -->
+  <script src="/vendors/socket.io/socket.io.js"></script>
+  <script>
+    // 连接服务器
+    var socket = io.connect('http://localhost:3000/');
+
+    window.onload=function(){
+        var send=document.getElementById("send");
+        send.onclick=function(){
+          var name=document.getElementById("name").value;
+          var msg=document.getElementById("msg").value;
+
+          // 发送消息
+          socket.emit('send', { data:name+":"+msg  });
+        };
+
+
+        // 监听服务器消息
+        socket.on('receive', function (data) {
+          console.log(data);
+          var list = document.getElementById("list");
+          // 写入聊天列表
+          list.innerHTML=list.innerHTML+"<br />"+data.data;
+          // 清空msg
+          document.getElementById("msg").value="";
+        });
+    };
+</script>
+</body>
+
+</html>
