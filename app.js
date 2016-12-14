@@ -24,6 +24,17 @@ var session = require('express-session');
 // cors
 var cors = require('cors');
 
+// 会话处理
+// cookie处理
+app.use(cookieParser());
+// session处理
+app.use(session({
+    secret: 'monknode',
+    cookie: { maxAge: 60000 },
+    resave: true,
+    saveUninitialized: true
+}));
+
 // 设置默认区域
 var defaultArea = "frontend";
 
@@ -83,17 +94,6 @@ app.use(flash());
 // 处理非get提交数据
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
-// 会话处理
-// cookie处理
-app.use(cookieParser());
-// session处理
-app.use(session({
-    secret: 'monknode',
-    cookie: { maxAge: 60000 },
-    resave: true,
-    saveUninitialized: true
-}));
 
 // 设置控制器文件夹并绑定到路由
 coreRoute
