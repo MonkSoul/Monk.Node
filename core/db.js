@@ -14,7 +14,7 @@ if (process.env.DATABASE_URL) {
 }
 var db = {};
 
-fs.readdirSync(__dirname, '..', 'models')
+fs.readdirSync(path.join(__dirname, '..', 'models'))
     // 过滤不包含.的文件名
     .filter(function (file) {
         return (file.indexOf(".") !== 0);
