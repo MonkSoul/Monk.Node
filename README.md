@@ -721,22 +721,37 @@ module.exports={
 
 > 文件上传集成强大的`multer`组件，[详细文档](https://www.npmjs.com/package/multer)
 
-- 使用教程
+- 客户端
 
 ```
-var multer  = require('multer');
-var upload = multer({ dest: 'uploads/' })
+<form action="/upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="logo">
+    <input type="submit" value="提交">
+</form>
+```
 
-module.exports={
-    // 单文件上传
-    post_upload:[upload.single('file'), function (req, res, next) {
-        // 上传成功。。。。
-    }],
-     // 多文件上传
-    post_uploads:[upload.array('file',10), function (req, res, next) {
-        // 上传成功。。。。
+- 服务端
+
+```
+var path = require('path');
+var fs = require('fs');
+var multer = require('multer');
+var upload = multer({ dest: 'uploads/' });
+
+module.exports = {
+    post_upload: [upload.single('logo'), function(req, res, next) {
+        var file = req.file;
+        var ext = path.extname(file.originalname);
+        fs.rename(file.path, file.path + ext, function(err) {
+            if (err) {
+                res.send(JSON.stringify(err));
+            }
+            next();
+        });
+    }, function(req, res) {
+        res.send("上传成功");
     }]
-};
+}
 ```
 
 ### Redis存储
