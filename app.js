@@ -24,6 +24,9 @@ var session = require('express-session');
 // cors
 var cors = require('cors');
 
+// 跨域支持
+app.use(cors());
+
 // 会话处理
 // cookie处理
 app.use(cookieParser());
@@ -34,6 +37,24 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
+
+// 设置视图引擎
+app.set('view engine', 'ejs');
+
+// 设置静态资源目录
+app.use(express.static(path.join(__dirname, 'areas', 'frontend', 'assets')));
+app.use(express.static(path.join(__dirname, 'areas', 'backend', 'assets')));
+app.use(express.static(path.join(__dirname, 'areas', 'tools', 'assets')));
+// 上传文件
+app.use(express.static(path.join(__dirname, 'uploads')));
+// 设置icon图标（如果没有favicon.icon）可以注释这一行代码
+app.use(favicon(path.join(__dirname, 'share', 'favicon.ico')));
+//flash支持
+app.use(flash());
+
+// 处理非get提交数据
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // 设置默认区域
 var defaultArea = "frontend";
@@ -59,9 +80,6 @@ router.use(function (req, res, next) {
 // 载入路由中间件
 app.use(router);
 
-// 设置视图引擎
-app.set('view engine', 'ejs');
-
 // 日志输出到文件系统，每日一个日志文件
 var accessLogDirectory = __dirname + '/logs/access';
 fs.existsSync(accessLogDirectory) || fs.mkdirSync(accessLogDirectory);
@@ -76,24 +94,6 @@ var accessLogStream = fileStreamRotator.getStream({
 app.use(logger('combined', { stream: accessLogStream }));
 // 设置错误日志文件地址
 var errorLogStream = fs.createWriteStream(errorLogDirectory + '/error.log', { 'flags': 'a' });
-
-// 跨域支持
-app.use(cors());
-
-// 设置静态资源目录
-app.use(express.static(path.join(__dirname, 'areas', 'frontend', 'assets')));
-app.use(express.static(path.join(__dirname, 'areas', 'backend', 'assets')));
-app.use(express.static(path.join(__dirname, 'areas', 'tools', 'assets')));
-// 上传文件
-app.use(express.static(path.join(__dirname, 'uploads')));
-// 设置icon图标（如果没有favicon.icon）可以注释这一行代码
-app.use(favicon(path.join(__dirname, 'share', 'favicon.ico')));
-//flash支持
-app.use(flash());
-
-// 处理非get提交数据
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
 
 // 设置控制器文件夹并绑定到路由
 coreRoute
