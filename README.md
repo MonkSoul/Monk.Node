@@ -40,6 +40,36 @@
 - 拓展性强，完美支持Node.js原生模块
 - 更多强大功能后续陆续集成
 
+## 视频教程
+
+1. [Monk.Node 简介&安装](http://url.cn/42W06hK)
+
+2. [Monk.Node 控制器](http://url.cn/42W06hK)
+
+3. [Monk.Node 视图引擎](http://url.cn/42W06hK)
+
+4. [Monk.Node 区域](http://url.cn/42W06hK)
+
+5. [Monk.Node 静态资源](http://url.cn/42W06hK)
+
+6. [Monk.Node 模型](http://url.cn/42W06hK)
+
+7. [Monk.Node ORM](http://url.cn/42W06hK)
+
+8. [Monk.Node 会话](http://url.cn/42W06hK)
+
+9. [Monk.Node 过滤器](http://url.cn/42W06hK)
+
+10. [Monk.Node 文件上传](http://url.cn/42W06hK)
+
+11. Monk.Node Redis（未更新）
+
+12. Monk.Node WebSocket（未更新）
+
+13. Monk.Node 入口文件（未更新）
+
+14. Monk.Node RESTful（未更新）
+
 ## 更新记录
 
 ```
