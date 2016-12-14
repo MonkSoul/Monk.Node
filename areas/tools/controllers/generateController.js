@@ -10,11 +10,11 @@ var auto = new SequelizeAuto(config.database, config.username, config.password, 
 // 生成器
 module.exports = {
     // 生成models模型
-    get_models: function(req, res) {
-        auto.run(function(err) {
+    get_models: function (req, res) {
+        auto.run(function (err) {
             if (err) throw err;
 
-            res.render("tools/generate/models", {
+            res.render("generate/models", {
                 tables: auto.tables,
                 foreignKeys: auto.foreignKeys
             });

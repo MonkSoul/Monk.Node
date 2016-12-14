@@ -1,6 +1,6 @@
 {
   "name": "monk.node",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "author": "百小僧",
   "description": "Nodejs MVC 框架",
   "keywords": [
@@ -40,13 +40,13 @@
     "morgan": "^1.7.0",
     "multer": "^1.2.0",
     "mysql": "^2.12.0",
-    "pg": "^6.1.0",
+    "pg": "^6.1.2",
     "pg-hstore": "^2.3.2",
     "redis": "^2.6.3",
     "sequelize": "^3.27.0",
     "sequelize-auto": "^0.4.18",
     "serve-favicon": "^2.3.2",
-    "socket.io": "^1.7.1",
+    "socket.io": "^1.7.2",
     "sqlite3": "^3.1.8",
     "tedious": "^1.14.0"
   }

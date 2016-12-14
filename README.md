@@ -2,13 +2,12 @@
 
 基于 Express.js(4.x) + Sequelize.js(3.x) 的Nodejs MVC 框架。
 
-
 ## 作者信息 
 
 - 原创作者：`百小僧` 
 - 开源协议：`MIT License`
 - 开发时间：`2016年12月06日`
-- 当前版本：`2.0.1`，2016年12月13日
+- 当前版本：`2.1.0`，2016年12月14日
 - 项目名称：`Monk.Node`
 - 版权所有：[百签软件（中山）有限公司](http://www.baisoft.org)
 - 联系方式：QQ群：`18863883`，作者QQ：`8020292`
@@ -21,11 +20,12 @@
 - 基于Node.js平台开发，Javascript作为主要编写语言
 - 极易入门，前后端开发者都能快速上手
 - 目录清晰，代码规范
-- 采用目前主流的MVC思想编写，并支持多区域，多站点开发
+- 采用目前主流的MVC思想编写，并支持多区域，多站点开发（**这是Express 4.x 所没有的**）
 - 底层采用主流的Express.js 4.x Web框架进行开发，拓展性极强，第三方模块丰富，并完全兼容Express.js 4.x功能
 - 集成强大的Nodejs数据库ORM组件：Sequelize.js，支持目前所有主流数据库
 - 集成强大的ejs模板引擎
 - 支持日志记录，日志输出
+- 支持多视图设置（**这是Express 4.x 所没有的**）
 - 支持跨域
 - 支持typescript编写
 - 支持Session，Cookies会话操作
@@ -43,6 +43,16 @@
 ## 更新记录
 
 ```
+
+============ 2016.12.14 V2.1.0 ============
+
+- [优化] 全面优化app.js 代码
+- [新增] 全局路由过滤器
+- [重构] 重构express.js单视图引擎，实现多视图引擎
+- [更新] 目录结构，移除根目录下的assets,views文件夹，新增share文件夹
+- [更新] postgres 版本
+- [更新] socket.io 版本
+- [更新] 使用文档
 
 ============ 2016.12.13 V2.0.1 ============
 
@@ -107,24 +117,18 @@ www WEB部署目录
 │  ├─backend                      后台区域目录
 │  │  ├─controllers               后台控制器目录
 │  │  │  ├─homeController.js      后台默认控制器
+│  │  ├─views                     后台视图目录
+│  │  ├─assets                    后台资源目录
 │  ├─frontend                     前台区域目录
 │  │  ├─controllers               前台控制器目录
 │  │  │  ├─homeController.js      前台默认控制器
+│  │  ├─views                     后台视图目录
+│  │  ├─assets                    后台资源目录
 │  ├─tools                        工具区域目录
 │  │  ├─controllers               前台控制器目录
 │  │  │  ├─generateController.js  数据库模型生成 控制器
-├─assets                          静态资源目录
-│  ├─backend                      后台资源目录
-│  │  ├─css                       后台资源样式目录
-│  │  ├─imgs                      后台资源图片目录
-│  │  ├─js                        后台资源脚本目录
-│  ├─frontend                     前台资源目录
-│  │  ├─css                       前台资源样式目录
-│  │  ├─imgs                      前台资源图片目录
-│  │  ├─js                        前台资源脚本目录
-│  ├─vendors                      第三方插件目录
-│  │  ├─socket.io                 socket.io客户端脚本
-│  ├─favicon.ico                  网站收藏图标
+│  │  ├─views                     后台视图目录
+│  │  ├─assets                    后台资源目录
 ├─config                          配置目录
 │  ├─db.json                      数据库配置文件
 ├─core                            核心目录
@@ -135,17 +139,12 @@ www WEB部署目录
 │  ├─access                       访问日志
 │  ├─error                        错误日志
 ├─models                          数据库表对应模型目录
+├─share                           共享目录
+│  ├─error.ejs                    错误提示模板
+│  ├─favicon.ico                  网站收藏图标
 ├─uploads                         用户上传文件存放目录
 ├─utils                           工具类库目录
 │  ├─socket.js                    Socket.io 服务器演示代码
-├─views                           视图模板目录
-│  ├─backend                      后台视图模板目录
-│  ├─frontend                     前台视图模板目录
-│  ├─share                        公共视图模板目录（404.ejs,500.ejs,error.ejs）
-│  │  ├─error.ejs                 错误视图模板
-│  ├─tools                        工具视图模板目录
-│  │  ├─generate                  生成数据库模型视图目录
-│  │  │  ├─models.js              数据库模型生成器视图模板
 ├─app.js                          入口文件
 ├─package.json                    包配置文件
 ```
@@ -184,11 +183,6 @@ $ npm start
 
 ### 入口配置
 
-- 设置视图模板目录
-
-```
-app.set('views', path.join(__dirname, 'views'));
-```
 
 - 设置视图模板引擎
 
@@ -199,7 +193,9 @@ app.set('view engine', 'ejs');
 - 设置静态资源目录
 
 ```
-app.use(express.static(path.join(__dirname, 'assets')));
+app.use(express.static(path.join(__dirname, 'areas', 'frontend', 'assets')));
+app.use(express.static(path.join(__dirname, 'areas', 'backend', 'assets')));
+app.use(express.static(path.join(__dirname, 'areas', 'tools', 'assets')));
 ```
 
 - 设置Cookie，Session配置信息
@@ -243,16 +239,15 @@ app.get("/", defautAction.get_index);
 ```
 // 错误处理
 // 404处理
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
 // 错误或者服务器500异常处理
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
     res.status(err.status || 500);
-    // 默认指定的是views/share/error.ejs
-    res.render('share/error', {
+    res.render(__dirname + '/share/error', {
         message: err.message,
         error: (app.get('env') === 'development') ? err : {}
     });
@@ -368,7 +363,7 @@ module.exports={
 
 ### 视图模板引擎
 
-> 视图模板引擎采用的是`ejs`模板引擎，默认视图目录为：`views`。[ejs详细文档](https://www.npmjs.com/package/ejs)
+> 视图模板引擎采用的是`ejs`模板引擎，默认视图目录为：区域下的`views`文件夹。[ejs详细文档](https://www.npmjs.com/package/ejs)
 
 - 基础语法
 
