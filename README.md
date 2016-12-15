@@ -455,16 +455,16 @@ module.exports={
 
 ### 静态资源
 
-> 静态资源默认目录为`assets`目录
+> 静态资源默认目录为各个区域下面的`assets`目录
 
 - 基础使用
 
 ```
-<img src="/frontend/imgs/logo.png" />
+<img src="/imgs/logo.png" />
 
-<link res="stylesheet" href="/frontend/css/style.css" />
+<link res="stylesheet" href="/css/style.css" />
 
-<script type="text/javascript" src="/frontend/js/script.js"></script>
+<script type="text/javascript" src="/js/script.js"></script>
 ```
 
 ### 模型
