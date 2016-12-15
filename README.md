@@ -78,7 +78,7 @@
 
 - [新增] 数据库操作db全局对象，无需通过 require进来了（**重点更新**）
 - [新增] 轻量级的images库，支持图片处理，包括水印，调整大小等等
-- [新增] 定位任务node-schedule模块
+- [新增] 定时任务node-schedule模块
 - [新增] 邮件发送nodemailer模块
 - [新增] lodash模块，提供非常方便的JavaScript工具操作库
 - [新增] 视频教程
