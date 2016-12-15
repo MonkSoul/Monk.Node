@@ -1,6 +1,6 @@
 {
   "name": "monk.node",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "author": "百小僧",
   "description": "Nodejs MVC 框架",
   "keywords": [

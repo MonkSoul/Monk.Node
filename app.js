@@ -16,7 +16,7 @@ var flash = require('connect-flash');
 var express = require('express');
 var app = express();
 // 载入核心路由解析组件
-var coreRoute = require(path.join(__dirname, 'core', 'route'));
+var resolve = require(path.join(__dirname, 'utils', 'route'));
 // cookie
 var cookieParser = require('cookie-parser');
 // session
@@ -24,7 +24,7 @@ var session = require('express-session');
 // cors
 var cors = require('cors');
 // 将db对象载入全局对象中
-global.db = require(path.join(__dirname, 'core', 'db'));
+global.db = require(path.join(__dirname, 'utils', 'db'));
 
 // 跨域支持
 app.use(cors());
@@ -44,13 +44,11 @@ app.use(session({
 app.set('view engine', 'ejs');
 
 // 设置静态资源目录
-app.use(express.static(path.join(__dirname, 'areas', 'frontend', 'assets')));
-app.use(express.static(path.join(__dirname, 'areas', 'backend', 'assets')));
-app.use(express.static(path.join(__dirname, 'areas', 'tools', 'assets')));
+app.use(express.static(path.join(__dirname, 'public')));
 // 上传文件
 app.use(express.static(path.join(__dirname, 'uploads')));
 // 设置icon图标（如果没有favicon.icon）可以注释这一行代码
-app.use(favicon(path.join(__dirname, 'share', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 //flash支持
 app.use(flash());
 
@@ -98,7 +96,7 @@ app.use(logger('combined', { stream: accessLogStream }));
 var errorLogStream = fs.createWriteStream(errorLogDirectory + '/error.log', { 'flags': 'a' });
 
 // 设置控制器文件夹并绑定到路由
-coreRoute
+resolve
     .setRouteDirectory({
         areaDirectory: __dirname + '/areas',
         controllerDirname: 'controllers',
@@ -109,7 +107,7 @@ coreRoute
 
 // 设置默认首页
 var defautAction = require(path.join(__dirname, 'areas', defaultArea, 'controllers', 'homeController'));
-app.get("/", defautAction["get_index"]);
+app.get("/", defautAction.get_index);
 
 // 错误处理
 // 404处理
@@ -124,12 +122,9 @@ app.use(function (err, req, res, next) {
     //写错误日志
     var errorMes = '[' + Date() + ']' + req.url + '\n' + '[' + error.stack + ']' + '\n';
     errorLogStream.write(errorMes);
-
-    res.status(err.status || 500);
-    res.render(__dirname + '/share/error', {
-        message: err.message,
-        error: error
-    });
+    var status = err.status || 500;
+    res.status(status);
+    res.send('<pre>' + status + ' ' + err.message + '\n' + errorMes + '</pre>');
 });
 
 // 设置端口
@@ -137,7 +132,7 @@ app.set('port', process.env.PORT || 3000);
 var server = app.listen(app.get('port'), function () {
     var host = server.address().address;
     var port = server.address().port;
-    console.log('启动成功！访问地址： http://%s:%s', host, port);
+    console.log('应用启动成功！访问地址： http://%s:%s', host, port);
 });
 
 // 引入socket 服务端模块。如无需即时通讯，注释即可

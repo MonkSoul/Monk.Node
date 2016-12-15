@@ -7,7 +7,7 @@
 - 原创作者：`百小僧` 
 - 开源协议：`MIT License`
 - 开发时间：`2016年12月06日`
-- 当前版本：`2.1.2`，2016年12月15日
+- 当前版本：`2.2.0`，2016年12月16日
 - 项目名称：`Monk.Node`
 - 版权所有：[百签软件（中山）有限公司](http://www.baisoft.org)
 - 联系方式：QQ群：`18863883`，作者QQ：`8020292`
@@ -50,7 +50,7 @@
 
 4. [Monk.Node 区域](http://url.cn/42W06hK)
 
-5. [Monk.Node 静态资源](http://url.cn/42W06hK)
+5. [Monk.Node 静态资源](http://url.cn/42W06hK) **（项目已调整，请按照最新文档）**
 
 6. [Monk.Node 模型](http://url.cn/42W06hK)
 
@@ -73,6 +73,16 @@
 ## 更新记录
 
 ```
+
+============ 2016.12.16 V2.2.0 ============
+
+- [删除] 删除所有区域下的assets资源文件
+- [删除] core文件夹，并将db.js,route.js转移到utils目录下
+- [更新] 错误提示页面，显示更多错误信息
+- [更新] 设置根目录下的public为资源文件，保持和express.js兼容 （重要调整）
+- [更新] core/db.js 加载模块代码，新增可配置的加载项
+- [更新] 基本示例
+- [更新] 静态资源文档
 
 ============ 2016.12.15 V2.1.2 ============
 
@@ -165,33 +175,28 @@ www WEB部署目录
 │  │  ├─controllers               后台控制器目录
 │  │  │  ├─homeController.js      后台默认控制器
 │  │  ├─views                     后台视图目录
-│  │  ├─assets                    后台资源目录
 │  ├─frontend                     前台区域目录
 │  │  ├─controllers               前台控制器目录
 │  │  │  ├─homeController.js      前台默认控制器
 │  │  ├─views                     后台视图目录
-│  │  ├─assets                    后台资源目录
 │  ├─tools                        工具区域目录
 │  │  ├─controllers               前台控制器目录
 │  │  │  ├─generateController.js  数据库模型生成 控制器
 │  │  ├─views                     后台视图目录
-│  │  ├─assets                    后台资源目录
 ├─config                          配置目录
 │  ├─db.json                      数据库配置文件
-├─core                            核心目录
-│  ├─db.js                        数据库模型操作核心库
-│  ├─route.js                     路由解析核心库
 ├─filters                         过滤器，中间件目录
 ├─logs                            日志保存目录
 │  ├─access                       访问日志
 │  ├─error                        错误日志
 ├─models                          数据库表对应模型目录
-├─share                           共享目录
-│  ├─error.ejs                    错误提示模板
+├─public                          静态资源目录
 │  ├─favicon.ico                  网站收藏图标
 ├─uploads                         用户上传文件存放目录
 ├─utils                           工具类库目录
 │  ├─socket.js                    Socket.io 服务器演示代码
+│  ├─db.js                        数据库模型操作核心库
+│  ├─route.js                     路由解析核心库
 ├─app.js                          入口文件
 ├─package.json                    包配置文件
 ```
@@ -240,9 +245,7 @@ app.set('view engine', 'ejs');
 - 设置静态资源目录
 
 ```
-app.use(express.static(path.join(__dirname, 'areas', 'frontend', 'assets')));
-app.use(express.static(path.join(__dirname, 'areas', 'backend', 'assets')));
-app.use(express.static(path.join(__dirname, 'areas', 'tools', 'assets')));
+app.use(express.static(path.join(__dirname, 'public')));
 ```
 
 - 设置Cookie，Session配置信息
@@ -263,7 +266,7 @@ app.use(session({
 
 ```
 // 设置控制器文件夹并绑定到路由
-coreRoute
+resolve
     .setRouteDirectory({
         areaDirectory: __dirname + '/areas',
         controllerDirname: 'controllers',
@@ -293,11 +296,13 @@ app.use(function (req, res, next) {
 });
 // 错误或者服务器500异常处理
 app.use(function (err, req, res, next) {
-    res.status(err.status || 500);
-    res.render(__dirname + '/share/error', {
-        message: err.message,
-        error: (app.get('env') === 'development') ? err : {}
-    });
+    var error = (req.app.get('env') === 'development') ? err : {};
+    //写错误日志
+    var errorMes = '[' + Date() + ']' + req.url + '\n' + '[' + error.stack + ']' + '\n';
+    errorLogStream.write(errorMes);
+    var status = err.status || 500;
+    res.status(status);
+    res.send('<pre>' + status + ' ' + err.message + '\n' + errorMes + '</pre>');
 });
 ```
 
@@ -457,7 +462,7 @@ module.exports={
 
 ### 静态资源
 
-> 静态资源默认目录为各个区域下面的`assets`目录
+> 静态资源默认目录为根目录下的`public`目录
 
 - 基础使用
 
