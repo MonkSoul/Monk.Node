@@ -109,7 +109,7 @@ coreRoute
 
 // 设置默认首页
 var defautAction = require(path.join(__dirname, 'areas', defaultArea, 'controllers', 'homeController'));
-app.get("/", defautAction.get_index);
+app.get("/", defautAction["get_index"]);
 
 // 错误处理
 // 404处理

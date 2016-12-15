@@ -10,12 +10,8 @@ io.on('connection', function (socket) {
 		io.emit('receive', data);
 	});
 
-
-	// 这里就写各种监听事件就可以了，
-	// 通过 socket.on("") 监听客户端事件，通过 io.emit("") 触发所有客户端事件，socket.emit("") 触发指定客户端
-
+	// ...
 });
-
 
 exports.listen = function (server) {
 	return io.listen(server);

@@ -77,6 +77,7 @@
 ============ 2016.12.15 V2.1.2 ============
 
 - [新增] 数据库操作db全局对象，无需通过 require进来了（**重点更新**）
+- [新增] utils/gmodels/js 模块
 - [新增] 轻量级的images库，支持图片处理，包括水印，调整大小等等
 - [新增] 定时任务node-schedule模块
 - [新增] 邮件发送nodemailer模块
@@ -85,6 +86,7 @@
 - [优化] 路由核心类库
 - [更新] debug模块
 - [更新] app.js 错误日志保存方法，以天为单位
+- [更新] 默认示例
 - [更新] ORM文档
 
 ============ 2016.12.14 V2.1.1 ============
@@ -215,7 +217,7 @@ $ npm start
 - `zip` 下载
 
 ```
-浏览器：http://git.oschina.net/baisoft_org/Monk.Node
+浏览器访问：http://git.oschina.net/baisoft_org/Monk.Node
 
 $ cd Monk.Node
 
