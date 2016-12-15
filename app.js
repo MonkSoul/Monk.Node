@@ -23,6 +23,8 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 // cors
 var cors = require('cors');
+// 将db对象载入全局对象中
+global.db = require(path.join(__dirname, 'core', 'db'));
 
 // 跨域支持
 app.use(cors());
@@ -73,7 +75,6 @@ router.use(function (req, res, next) {
         viewPath = path.join(__dirname, 'areas', defaultArea, 'views');
     }
     app.set('views', viewPath);
-    console.log("当前视图引擎路径为：" + viewPath);
     next();
 });
 
@@ -89,7 +90,8 @@ fs.existsSync(errorLogDirectory) || fs.mkdirSync(errorLogDirectory);
 var accessLogStream = fileStreamRotator.getStream({
     filename: accessLogDirectory + '/access-%DATE%.log',
     frequency: 'daily',
-    verbose: false
+    verbose: false,
+    date_format: "YYYY-MM-DD"
 })
 app.use(logger('combined', { stream: accessLogStream }));
 // 设置错误日志文件地址
@@ -118,10 +120,15 @@ app.use(function (req, res, next) {
 });
 // 错误或者服务器500异常处理
 app.use(function (err, req, res, next) {
+    var error = (req.app.get('env') === 'development') ? err : {};
+    //写错误日志
+    var errorMes = '[' + Date() + ']' + req.url + '\n' + '[' + error.stack + ']' + '\n';
+    errorLogStream.write(errorMes);
+
     res.status(err.status || 500);
     res.render(__dirname + '/share/error', {
         message: err.message,
-        error: (app.get('env') === 'development') ? err : {}
+        error: error
     });
 });
 

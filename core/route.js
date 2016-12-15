@@ -17,13 +17,13 @@ module.exports = {
     bind: function(app, cb) {
         var self = this;
 
-        // 获取所有的区域
+        // get all areas
         fs.readdir(self.areaDirectory, function(err, areas) {
             if (err) {
                 if (cb) cb(err);
                 return;
             }
-            // 遍历所有的区域
+            // foreach all areas
             areas.forEach(function(area) {
 
                 fs.readdir(path.join(self.areaDirectory, "/", area, "/", self.controllerDirname), function(err, list) {
