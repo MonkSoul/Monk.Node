@@ -1,4 +1,5 @@
 var gmodels = require('../../../utils/gmodels');
+var captcha = require('../../../utils/captcha');
 // 生成器
 module.exports = {
     // 生成models模型
@@ -9,5 +10,13 @@ module.exports = {
                 foreignKeys: foreignKeys
             });
         });
+    },
+    // 生成验证码
+    get_captcha: function (req, res) {
+        var img = captcha.makeCapcha(110, 40);
+        req.session.captcha = img.str;
+        console.log("验证码：" + img.str);
+        // 输出图片
+        res.send(img.getFileData());
     }
 };

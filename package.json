@@ -1,6 +1,6 @@
 {
   "name": "monk.node",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "author": "百小僧",
   "description": "Nodejs MVC 框架",
   "keywords": [
@@ -52,6 +52,7 @@
     "serve-favicon": "^2.3.2",
     "socket.io": "^1.7.2",
     "sqlite3": "^3.1.8",
-    "tedious": "^1.14.0"
+    "tedious": "^1.14.0",
+    "zengming": "^0.1.4"
   }
 }
