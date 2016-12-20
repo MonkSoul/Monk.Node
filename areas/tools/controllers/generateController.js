@@ -15,8 +15,6 @@ module.exports = {
     get_captcha: function (req, res) {
         var img = captcha.makeCapcha(110, 40);
         req.session.captcha = img.str;
-        console.log("验证码：" + img.str);
-        // 输出图片
         res.send(img.getFileData());
     }
 };

@@ -3,9 +3,10 @@ var path = require('path');
 
 module.exports = {
     // set route directory
-    setRouteDirectory: function(routeConfig) {
+    setRouteDirectory: function (routeConfig) {
         this.areaDirectory = routeConfig.areaDirectory;
         this.controllerDirname = routeConfig.controllerDirname;
+        this.defaultArea = routeConfig.defaultArea;
         this.defautController = routeConfig.defautController;
         this.defautAction = routeConfig.defautAction;
         this.pathParams = {};
@@ -14,24 +15,24 @@ module.exports = {
         return this;
     },
 
-    bind: function(app, cb) {
+    bind: function (app, cb) {
         var self = this;
 
         // get all areas
-        fs.readdir(self.areaDirectory, function(err, areas) {
+        fs.readdir(self.areaDirectory, function (err, areas) {
             if (err) {
                 if (cb) cb(err);
                 return;
             }
             // foreach all areas
-            areas.forEach(function(area) {
+            areas.forEach(function (area) {
 
-                fs.readdir(path.join(self.areaDirectory, "/", area, "/", self.controllerDirname), function(err, list) {
+                fs.readdir(path.join(self.areaDirectory, "/", area, "/", self.controllerDirname), function (err, list) {
                     if (err) {
                         if (cb) cb(err);
                         return;
                     }
-                    list.forEach(function(file) {
+                    list.forEach(function (file) {
                         var fileName = path.join(self.areaDirectory, "/", area, "/", self.controllerDirname) + '/' + file;
                         if (fileName.indexOf('Controller') == -1 ||
                             !self.isFileModule(file))
@@ -66,23 +67,78 @@ module.exports = {
                             //The parameters in the controller-function
                             var params = self.translateFunctionBodyToParameterArray(f);
 
-                            aliases.forEach(function(alias) {
+                            aliases.forEach(function (alias) {
                                 //The generated path (method and url)
                                 var path = self.translatePath(area, key, alias, params);
                                 //Does this function translate to a valid path for routing?
                                 if (path !== false) {
+
                                     self.pathMiddlewares[path.method.toLowerCase() + path.path] = middlewareFunctions;
-                                    var pathObj = { path: path, params: params, f: f };
+                                    var pathObj = {
+                                        path: path, params: params, f: f, src: {
+                                            area: area, method: key, controller: alias, params: params
+                                        }
+                                    };
+                                    // default controller
+                                    if ((pathObj.src.controller.toLowerCase() == self.defautController.toLowerCase())) {
+                                        if (pathObj.f.name.toLowerCase() == "get_" + self.defautAction.toLowerCase()) {
+                                            var _method = (key.split('_'))[0].toLowerCase();
+                                            if (area.toLowerCase() == self.defaultArea.toLowerCase()) {
+                                                self.pathMiddlewares[_method + "/"] = middlewareFunctions;
+                                                paths.push({
+                                                    path: {
+                                                        path: "/",
+                                                        method: _method
+                                                    }, params: params, f: f, src: {
+                                                        area: area, func: key, controller: alias, params: params
+                                                    }
+                                                });
+                                            }
+
+                                            self.pathMiddlewares[_method + "/" + area] = middlewareFunctions;
+                                            paths.push({
+                                                path: {
+                                                    path: "/" + area,
+                                                    method: _method
+                                                }, params: params, f: f, src: {
+                                                    area: area, func: key, controller: alias, params: params
+                                                }
+                                            });
+                                            self.pathMiddlewares[_method + "/" + area + "/" + alias] = middlewareFunctions;
+                                            paths.push({
+                                                path: {
+                                                    path: "/" + area + "/" + alias,
+                                                    method: _method
+                                                }, params: params, f: f, src: {
+                                                    area: area, func: key, controller: alias, params: params
+                                                }
+                                            });
+                                        }
+                                    }
+                                    else {
+                                        if (pathObj.f.name.toLowerCase() == "get_" + self.defautAction.toLowerCase()) {
+                                            var _method = (key.split('_'))[0].toLowerCase();
+                                            self.pathMiddlewares[_method + "/" + area + "/" + alias] = middlewareFunctions;
+                                            paths.push({
+                                                path: {
+                                                    path: "/" + area + "/" + alias,
+                                                    method: _method
+                                                }, params: params, f: f, src: {
+                                                    area: area, func: key, controller: alias, params: params
+                                                }
+                                            });
+                                        }
+                                    }
+
                                     paths.push(pathObj);
                                 }
                             });
                         }
-
-                        paths.sort(function(a, b) {
+                        paths.sort(function (a, b) {
                             return b.path.path.localeCompare(a.path.path);
                         });
 
-                        paths.forEach(function(pathObj) {
+                        paths.forEach(function (pathObj) {
                             //Binds the route in the app to the method
                             self.bindFunction(app, pathObj.path, pathObj.params, pathObj.f);
                         })
@@ -94,7 +150,7 @@ module.exports = {
             });
         });
     },
-    bindFunction: function(app, path, params, f) {
+    bindFunction: function (app, path, params, f) {
 
         var self = this;
 
@@ -108,7 +164,7 @@ module.exports = {
             app[path.method.toLowerCase()](
                 path.path,
                 self.pathMiddlewares[pathKey],
-                function(req, res) {
+                function (req, res) {
                     var reqKey = req.method.toLowerCase() + req.route.path;
                     if (!self.pathParams[reqKey]) reqKey = 'get' + req.route.path;
                     var clonedParams = self.pathParams[reqKey].slice(0);
@@ -123,7 +179,7 @@ module.exports = {
 
             app[path.method.toLowerCase()](
                 path.path,
-                function(req, res) {
+                function (req, res) {
                     var reqKey = req.method.toLowerCase() + req.route.path;
                     if (!self.pathParams[reqKey]) reqKey = 'get' + req.route.path;
                     var clonedParams = self.pathParams[reqKey].slice(0);
@@ -137,7 +193,7 @@ module.exports = {
 
     },
 
-    translateKeysArrayToValuesArray: function(keysArray, keyValueObject) {
+    translateKeysArrayToValuesArray: function (keysArray, keyValueObject) {
         var valuesArray = [];
         for (var i = 0; i < keysArray.length; i++) {
             valuesArray.push(keyValueObject[keysArray[i]]);
@@ -145,8 +201,7 @@ module.exports = {
         return valuesArray;
     },
 
-    translateFunctionBodyToParameterArray: function(f) {
-
+    translateFunctionBodyToParameterArray: function (f) {
         if (typeof f == 'function') {
             var params = f.toString()
                 .replace(/((\/\/.*$)|(\/\*[\s\S]*?\*\/)|(\s))/mg, '')
@@ -167,7 +222,7 @@ module.exports = {
 
     },
 
-    translateFileNameToControllerName: function(fileName) {
+    translateFileNameToControllerName: function (fileName) {
         return fileName
             .slice(0,
             //Get everything before the last dot
@@ -175,7 +230,7 @@ module.exports = {
             .replace('Controller', '');
     },
 
-    translatePath: function(areaName, methodName, controllerName, parameters) {
+    translatePath: function (areaName, methodName, controllerName, parameters) {
         var self = this;
 
         //Ensure that both strings are lower-case
@@ -198,22 +253,22 @@ module.exports = {
         var path = '/' + areaName + '/';
 
         //Append controller-name to path, if different from 'home'
-        if (controllerName != self.defautController)
-            path += controllerName;
+        //if (controllerName != self.defautController)
+        path += controllerName;
 
         //Append the rest of the parts
-        parts.forEach(function(part) {
-            if (part != self.defautAction) {
-                var separator = !!~parameters.indexOf(part) ? '/:' : '/';
-                if (separator == '/') {
-                    //Replaces the camelCased section with a hyphenated lowercase string
-                    part = part.replace(/([A-Z])/g, '-$1').toLowerCase();
-                }
-                path += separator + part;
+        parts.forEach(function (part) {
+            //if (part != self.defautAction) {
+            var separator = !!~parameters.indexOf(part) ? '/:' : '/';
+            if (separator == '/') {
+                //Replaces the camelCased section with a hyphenated lowercase string
+                part = part.replace(/([A-Z])/g, '-$1').toLowerCase();
             }
+            path += separator + part;
+            //}
         });
 
-        parameters.forEach(function(parameter) {
+        parameters.forEach(function (parameter) {
             if (!~parts.indexOf(parameter))
                 path += "/:" + parameter;
         });
@@ -224,7 +279,7 @@ module.exports = {
         }
     },
 
-    isFileModule: function(file) {
+    isFileModule: function (file) {
         var ext = path.extname(file);
 
         if (path.basename(file, ext)[0] === '.') {
@@ -238,7 +293,7 @@ module.exports = {
         return true;
     },
 
-    isValidExtension: function(ext) {
+    isValidExtension: function (ext) {
         var keys = Object.keys(require.extensions);
         return keys.indexOf(ext) !== -1;
     }

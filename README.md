@@ -7,7 +7,7 @@
 - 原创作者：`百小僧` 
 - 开源协议：`MIT License`
 - 开发时间：`2016年12月06日`
-- 当前版本：`2.2.1`，2016年12月16日
+- 当前版本：`2.2.2`，2016年12月20日
 - 项目名称：`Monk.Node`
 - 版权所有：[百签软件（中山）有限公司](http://www.baisoft.org)
 - 联系方式：QQ群：`18863883`，作者QQ：`8020292`
@@ -73,6 +73,17 @@
 ## 更新记录
 
 ```
+
+============ 2016.12.20 V2.2.2 ============
+
+- [新增] utils/route.js 默认路由区域设置，默认控制器，默认Action路由支持
+         如：http://localhost:3000 == http://localhost:3000/frontend  == http://localhost:3000/frontend/home == http://localhost:3000/frontend/home/index
+- [更新] app.js 核心代码
+- [更新] multer 文件上传模块
+- [更新] debug 调试模块
+- [优化] utils/route.js 核心代码
+- [删除] app.js 默认首页设置代码，调整为默认区域设置，默认首页由 默认区域，默认控制器，默认Action组成
+- [修复] 文档错误问题 
 
 ============ 2016.12.16 V2.2.1 ============
 
@@ -180,7 +191,7 @@ www WEB部署目录
 │  ├─frontend                     前台区域目录
 │  │  ├─controllers               前台控制器目录
 │  │  │  ├─homeController.js      前台默认控制器
-│  │  ├─views                     后台视图目录
+│  │  ├─views                     前台视图目录
 │  ├─tools                        工具区域目录
 │  │  ├─controllers               前台控制器目录
 │  │  │  ├─generateController.js  数据库模型生成 控制器
@@ -276,14 +287,6 @@ resolve
         defautAction: 'index'
     })
     .bind(router);
-```
-
-- 设置网站默认首页
-
-```
-// 设置默认首页，默认指向的是：http://localhost:3000/frontend/
-var defautAction = require(path.join(__dirname, 'areas', 'frontend', 'controllers', 'homeController'));
-app.get("/", defautAction.get_index);
 ```
 
 - 设置404，500错误处理

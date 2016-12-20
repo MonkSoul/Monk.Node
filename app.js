@@ -64,7 +64,7 @@ var router = express.Router();
 // 路由中间件,实现多视图切换
 router.use(function (req, res, next) {
     var url = req.url;
-    var pathArr = url.split("/");
+    var pathArr = url.split(/\/|\?/);
     var viewPath = path.join(__dirname, 'areas', defaultArea, 'views');
     if (pathArr[1] != "" && pathArr[1] != "favicon.ico") {
         viewPath = path.join(__dirname, 'areas', pathArr[1], 'views');
@@ -100,14 +100,11 @@ resolve
     .setRouteDirectory({
         areaDirectory: __dirname + '/areas',
         controllerDirname: 'controllers',
+        defaultArea: defaultArea,
         defautController: 'home',
         defautAction: 'index'
     })
     .bind(router);
-
-// 设置默认首页
-var defautAction = require(path.join(__dirname, 'areas', defaultArea, 'controllers', 'homeController'));
-app.get("/", defautAction.get_index);
 
 // 错误处理
 // 404处理
