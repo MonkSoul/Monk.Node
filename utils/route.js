@@ -81,7 +81,7 @@ module.exports = {
                                     };
                                     // default controller
                                     if ((pathObj.src.controller.toLowerCase() == self.defautController.toLowerCase())) {
-                                        if (pathObj.f.name.toLowerCase() == "get_" + self.defautAction.toLowerCase()) {
+                                        if (key.toLowerCase() == "get_" + self.defautAction.toLowerCase()) {
                                             var _method = (key.split('_'))[0].toLowerCase();
                                             if (area.toLowerCase() == self.defaultArea.toLowerCase()) {
                                                 self.pathMiddlewares[_method + "/"] = middlewareFunctions;
@@ -116,7 +116,7 @@ module.exports = {
                                         }
                                     }
                                     else {
-                                        if (pathObj.f.name.toLowerCase() == "get_" + self.defautAction.toLowerCase()) {
+                                        if (key.toLowerCase() == "get_" + self.defautAction.toLowerCase()) {
                                             var _method = (key.split('_'))[0].toLowerCase();
                                             self.pathMiddlewares[_method + "/" + area + "/" + alias] = middlewareFunctions;
                                             paths.push({
