@@ -6,9 +6,9 @@ module.exports = {
     setRouteDirectory: function (routeConfig) {
         this.areaDirectory = routeConfig.areaDirectory;
         this.controllerDirname = routeConfig.controllerDirname;
-        this.defaultArea = routeConfig.defaultArea;
-        this.defautController = routeConfig.defautController;
-        this.defautAction = routeConfig.defautAction;
+        this.defaultArea = routeConfig.defaultArea.toLowerCase();
+        this.defautController = routeConfig.defautController.toLowerCase();
+        this.defautAction = routeConfig.defautAction.toLowerCase();
         this.pathParams = {};
         this.pathFunctions = {};
         this.pathMiddlewares = {};
@@ -40,7 +40,7 @@ module.exports = {
                         var controller = require(fileName);
                         var aliases = controller['aliases'] || [];
                         delete controller['aliases'];
-                        aliases.push(self.translateFileNameToControllerName(file));
+                        aliases.push((self.translateFileNameToControllerName(file)).toLowerCase());
 
                         var paths = [];
 
@@ -73,64 +73,11 @@ module.exports = {
                                 //Does this function translate to a valid path for routing?
                                 if (path !== false) {
 
-                                    self.pathMiddlewares[path.method.toLowerCase() + path.path] = middlewareFunctions;
-                                    var pathObj = {
-                                        path: path, params: params, f: f, src: {
-                                            area: area, method: key, controller: alias, params: params
-                                        }
-                                    };
-                                    // default controller
-                                    if ((pathObj.src.controller.toLowerCase() == self.defautController.toLowerCase())) {
-                                        if (key.toLowerCase() == "get_" + self.defautAction.toLowerCase()) {
-                                            var _method = (key.split('_'))[0].toLowerCase();
-                                            if (area.toLowerCase() == self.defaultArea.toLowerCase()) {
-                                                self.pathMiddlewares[_method + "/"] = middlewareFunctions;
-                                                paths.push({
-                                                    path: {
-                                                        path: "/",
-                                                        method: _method
-                                                    }, params: params, f: f, src: {
-                                                        area: area, func: key, controller: alias, params: params
-                                                    }
-                                                });
-                                            }
-
-                                            self.pathMiddlewares[_method + "/" + area] = middlewareFunctions;
-                                            paths.push({
-                                                path: {
-                                                    path: "/" + area,
-                                                    method: _method
-                                                }, params: params, f: f, src: {
-                                                    area: area, func: key, controller: alias, params: params
-                                                }
-                                            });
-                                            self.pathMiddlewares[_method + "/" + area + "/" + alias] = middlewareFunctions;
-                                            paths.push({
-                                                path: {
-                                                    path: "/" + area + "/" + alias,
-                                                    method: _method
-                                                }, params: params, f: f, src: {
-                                                    area: area, func: key, controller: alias, params: params
-                                                }
-                                            });
-                                        }
-                                    }
-                                    else {
-                                        if (key.toLowerCase() == "get_" + self.defautAction.toLowerCase()) {
-                                            var _method = (key.split('_'))[0].toLowerCase();
-                                            self.pathMiddlewares[_method + "/" + area + "/" + alias] = middlewareFunctions;
-                                            paths.push({
-                                                path: {
-                                                    path: "/" + area + "/" + alias,
-                                                    method: _method
-                                                }, params: params, f: f, src: {
-                                                    area: area, func: key, controller: alias, params: params
-                                                }
-                                            });
-                                        }
-                                    }
-
+                                    self.pathMiddlewares[path.method + path.path] = middlewareFunctions;
+                                    var pathObj = { path: path, params: params, f: f };
                                     paths.push(pathObj);
+
+                                    paths = self.addDefaultRoute(path, area, key, alias, params, paths, middlewareFunctions, f);
                                 }
                             });
                         }
@@ -191,6 +138,41 @@ module.exports = {
 
         }
 
+    },
+
+    addDefaultRoute: function (path, area, key, alias, params, paths, middlewareFunctions, f) {
+        var self = this;
+
+        var defaultPath = "";
+        // set default route
+        if ((alias == self.defautController)) {
+            if (key.toLowerCase() == "get_" + self.defautAction) {
+                if (area == self.defaultArea) {
+                    defaultPath = "/";
+                    self.pathMiddlewares[path.method + defaultPath] = middlewareFunctions;
+                    paths.push({ path: { path: defaultPath, method: path.method }, params: params, f: f });
+                }
+
+                defaultPath = "/" + area;
+                self.pathMiddlewares[path.method + defaultPath] = middlewareFunctions;
+                paths.push({ path: { path: defaultPath, method: path.method }, params: params, f: f });
+
+
+                defaultPath = "/" + area + "/" + alias;
+                self.pathMiddlewares[path.method + defaultPath] = middlewareFunctions;
+                paths.push({ path: { path: defaultPath, method: path.method }, params: params, f: f });
+            }
+        }
+        else {
+            if (key.toLowerCase() == "get_" + self.defautAction) {
+                defaultPath = "/" + area + "/" + alias;
+
+                self.pathMiddlewares[path.method + defaultPath] = middlewareFunctions;
+                paths.push({ path: { path: defaultPath, method: path.method }, params: params, f: f });
+            }
+        }
+
+        return paths;
     },
 
     translateKeysArrayToValuesArray: function (keysArray, keyValueObject) {
