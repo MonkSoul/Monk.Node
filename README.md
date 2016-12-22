@@ -833,6 +833,73 @@ module.exports={
 };
 ```
 
+### 表单提交
+
+- 视图布局：
+
+```
+<h3>表单（不带文件上传，不带： enctype="multipart/form-data"）：</h3>
+    <form action="/backend/home/form1" method="post">
+        <input type="text" name="name" />
+        <input type="submit" value="提交">
+    </form>
+    <h3>表单（不带文件上传，带： enctype="multipart/form-data"）：</h3>
+    <form action="/backend/home/form2" method="post" enctype="multipart/form-data">
+        <input type="text" name="name" />
+        <input type="submit" value="提交">
+    </form>
+    <h3>表单（带单个文件上传，带： enctype="multipart/form-data"）：</h3>
+    <form action="/backend/home/form3" method="post" enctype="multipart/form-data">
+        <input type="file" name="file1">
+        <input type="text" name="name" />
+        <input type="submit" value="提交">
+    </form>
+    <h3>表单（带多个文件上传，带： enctype="multipart/form-data"）：</h3>
+    <form action="/backend/home/form4" method="post" enctype="multipart/form-data">
+        <input type="file" name="file1">
+        <input type="file" name="file1">
+        <input type="text" name="name" />
+        <input type="submit" value="提交">
+    </form>
+    <h3>表单（带多个文件上传，上传表单名称 不一样(file1,file2,...)，带： enctype="multipart/form-data"）：</h3>
+    <form action="/backend/home/form5" method="post" enctype="multipart/form-data">
+        <input type="file" name="file1">
+        <input type="file" name="file2">
+        <input type="text" name="name" />
+        <input type="submit" value="提交">
+    </form>
+```
+
+- 控制器Action处理：
+
+```
+var multer = require('multer');
+
+module.exports = {
+    // 表单（不带文件上传，不带： enctype="multipart/form-data"）
+    post_form1: function (req, res) {
+        res.json(req.body);
+    },
+    // 表单（不带文件上传，带： enctype="multipart/form-data"）：
+    post_form2: [multer().array(), function (req, res) {
+        res.json(req.body);
+    }],
+    // 表单（带单个文件上传，带： enctype="multipart/form-data"）：
+    post_form3: [multer().single('file1'), function (req, res) {
+        res.send("文件：" + JSON.stringify(req.file) + "<br />表单" + JSON.stringify(req.body))
+    }],
+    // 表单（带多个文件上传，带： enctype="multipart/form-data"）：
+    post_form4: [multer().array('file1'), function (req, res) {
+        res.send("文件：" + JSON.stringify(req.files) + "<br />表单" + JSON.stringify(req.body))
+    }],
+    // 表单（带多个文件上传，上传表单名称 不一样(file1,file2,...)，带： enctype="multipart/form-data"）：
+    post_form5: [multer().fields([{ name: "file1" }, { name: "file2" }]), function (req, res) {
+        res.send("文件：" + JSON.stringify(req.files) + "<br />表单" + JSON.stringify(req.body))
+    }]
+};
+```
+
+详细文档，请参考：[multer 文档](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md)
 
 ### 文件上传
 

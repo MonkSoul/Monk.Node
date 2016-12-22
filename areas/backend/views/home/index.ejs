@@ -10,5 +10,36 @@
     <a href="/">前台区域</a>
     <p></p>
     验证码：<img src="/tools/generate/captcha" />
+
+    <h3>表单（不带文件上传，不带： enctype="multipart/form-data"）：</h3>
+    <form action="/backend/home/form1" method="post">
+        <input type="text" name="name" />
+        <input type="submit" value="提交">
+    </form>
+    <h3>表单（不带文件上传，带： enctype="multipart/form-data"）：</h3>
+    <form action="/backend/home/form2" method="post" enctype="multipart/form-data">
+        <input type="text" name="name" />
+        <input type="submit" value="提交">
+    </form>
+    <h3>表单（带单个文件上传，带： enctype="multipart/form-data"）：</h3>
+    <form action="/backend/home/form3" method="post" enctype="multipart/form-data">
+        <input type="file" name="file1">
+        <input type="text" name="name" />
+        <input type="submit" value="提交">
+    </form>
+    <h3>表单（带多个文件上传，带： enctype="multipart/form-data"）：</h3>
+    <form action="/backend/home/form4" method="post" enctype="multipart/form-data">
+        <input type="file" name="file1">
+        <input type="file" name="file1">
+        <input type="text" name="name" />
+        <input type="submit" value="提交">
+    </form>
+    <h3>表单（带多个文件上传，上传表单名称 不一样(file1,file2,...)，带： enctype="multipart/form-data"）：</h3>
+    <form action="/backend/home/form5" method="post" enctype="multipart/form-data">
+        <input type="file" name="file1">
+        <input type="file" name="file2">
+        <input type="text" name="name" />
+        <input type="submit" value="提交">
+    </form>
 </body>
 </html>
