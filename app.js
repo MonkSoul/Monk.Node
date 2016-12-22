@@ -76,6 +76,15 @@ router.use(function (req, res, next) {
     next();
 });
 
+// 实现ViewData全局功能，
+// ejs页面通过 <%=_locals.（locals文件夹下的文件名） %>访问，如：<%=_locals.setting.name %>
+// action通过 res.locals.setting  访问
+var locals = require(path.join(__dirname, "utils", "locals"));
+router.use(function (req, res, next) {
+    res.locals = locals;
+    next();
+});
+
 // 载入路由中间件
 app.use(router);
 

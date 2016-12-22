@@ -7,7 +7,7 @@ Monk.Node：基于 Node.JS 一套 Web MVC 应用解决方案。
 - 原创作者：`百小僧` 
 - 开源协议：`MIT License`
 - 开发时间：`2016年12月06日`
-- 当前版本：`2.2.4`，2016年12月21日
+- 当前版本：`2.2.5`，2016年12月22日
 - 项目名称：`Monk.Node`
 - 版权所有：[百签软件（中山）有限公司](http://www.baisoft.org)
 - 联系方式：QQ群：`18863883`，作者QQ：`8020292`
@@ -24,6 +24,7 @@ Monk.Node：基于 Node.JS 一套 Web MVC 应用解决方案。
 - 底层采用主流的Express.js 4.x Web框架进行开发，拓展性极强，第三方模块丰富，并完全兼容Express.js 4.x功能
 - 集成强大的Nodejs数据库ORM组件：Sequelize.js，支持目前所有主流数据库
 - 集成强大的ejs模板引擎
+- 支持强大的全局数据注入器（**类似ASP.NET MVC中的ViewData**）
 - 支持日志记录，日志输出
 - 支持多视图设置（**这是Express 4.x 所没有的**）
 - 支持跨域
@@ -74,11 +75,16 @@ Monk.Node：基于 Node.JS 一套 Web MVC 应用解决方案。
 
 ```
 
-============ 2016.12.21 V2.2.4 ============
+============ 2016.12.22 V2.2.5 ============
 
-- [优化] utils/route.js代码
+- [新增] locals文件夹，定义全局数据注入，类似ASP.NET MVC的ViewData数据
+- [新增] utils/locals.js 模块，全局注入核心模块
+- [更新] app.js 核心代码，使其支持全局数据注入
+- [更新] utils/route.js 模型，使其支持局部数据注入
+- [更新] 使用文档
 - [更新] sequelize模块
 - [更新] debug模块
+- [优化] utils/route.js代码
 
 ============ 2016.12.20 V2.2.3 ============
 
@@ -206,6 +212,7 @@ www WEB部署目录
 ├─config                          配置目录
 │  ├─db.json                      数据库配置文件
 ├─filters                         过滤器，中间件目录
+├─locals                          全局数据注入目录，支持.json文件和.js模块
 ├─logs                            日志保存目录
 │  ├─access                       访问日志
 │  ├─error                        错误日志
@@ -252,6 +259,60 @@ $ npm start
 
 浏览器：http://localhost:3000/
 ```
+
+### **全局数据注入（v2.2.5 支持）**
+
+全局数据注入 表示可以在 `locals`目录下定义`.json`或者`.js`模块文件，这个文件中暴露的数据或者接口可以在 **整个请求，整个控制器，整个Action和整个视图模板（ejs）中使用**
+
+例如：在locals文件夹下定义 `setting.js`模块文件
+
+```
+module.exports = {
+    "name": "Monk.Node",
+    "version": "2.2.5",
+    "author": "百小僧",
+    "company": "百签软件（中山）有限公司"
+};
+```
+
+- 在控制器中的使用：res.locals.文件名
+
+```
+module.exports={
+    get_index:function(req,res){
+        var setting=res.locals.setting;     // setting就是文件名
+        var name= setting.name; // => Monk.Node
+        var version= setting.version; // => 2.2.5
+    }
+};
+```
+
+- 在视图页面ejs中使用 _locals.文件名
+
+```
+<%=_locals.setting.name %>
+<%=_locals.setting.version %>
+<%=_locals.setting.company %>
+```
+
+当然，我们也可以定义局部数据注入，局部数据注入通常在`action`中定义的
+
+```
+module.exports={
+    get_index:function(req,res){
+        res.locals.abc="我是局部的。。。。。";
+    }
+};
+```
+
+- 在视图页面ejs中使用
+
+```
+<%=_locals.abc %>
+```
+
+全局数据注入使用非常灵活，可以结合数据库操作，最终通过 `module.exports`返回`json对象`数据即可
+
 
 ### 入口配置
 
