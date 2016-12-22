@@ -9,6 +9,7 @@ var fileStreamRotator = require('file-stream-rotator')
 var logger = require('morgan');
 // post参数解析
 var bodyParser = require('body-parser');
+var multer = require('multer');
 // flash支持
 var flash = require('connect-flash');
 
@@ -54,7 +55,8 @@ app.use(flash());
 
 // 处理非get提交数据
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(multer().array());
 
 // 设置默认区域
 var defaultArea = "frontend";

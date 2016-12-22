@@ -85,6 +85,7 @@ Monk.Node：基于 Node.JS 一套 Web MVC 应用解决方案。
 - [更新] sequelize模块
 - [更新] debug模块
 - [优化] utils/route.js代码
+- [修复] 表单 enctype="multipart/form-data" 数据无法获取问题
 
 ============ 2016.12.20 V2.2.3 ============
 
