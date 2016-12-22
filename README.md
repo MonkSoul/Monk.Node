@@ -1,6 +1,6 @@
 # Monk.Node
 
-基于 Express.js(4.x) + Sequelize.js(3.x) 的Nodejs MVC 框架。
+Monk.Node：基于 Node.JS 一套 Web MVC 应用解决方案。 
 
 ## 作者信息 
 
