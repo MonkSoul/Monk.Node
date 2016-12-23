@@ -11,6 +11,7 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 // flash支持
 var flash = require('connect-flash');
+var ejs = require('ejs');
 
 // express 框架
 var express = require('express');
@@ -41,7 +42,8 @@ app.use(session({
 }));
 
 // 设置视图引擎
-app.set('view engine', 'ejs');
+app.engine('html', ejs.__express);
+app.set('view engine', 'html');
 
 // 设置静态资源目录
 app.use(express.static(path.join(__dirname, 'public')));
