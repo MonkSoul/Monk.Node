@@ -1,45 +1,43 @@
-# Monk.Node
+# Monk.Node — 极易入门的Node.JS MVC 框架
 
-Monk.Node：基于 Node.JS 一套 Web MVC 应用解决方案。 
+Monk.Node 是一个免费开源的，快速、简单的面向对象的轻量级Node.JS开发框架，是为了敏捷WEB应用开发和简化企业应用开发而诞生的。Monk.Node从诞生以来一直秉承简洁实用的设计原则，在保持出色的性能和至简的代码的同时，也注重易用性。遵循MIT开源许可协议发布，意味着你可以免费使用Monk.Node，甚至允许把你基于Monk.Node开发的应用开源或商业产品发布/销售。
 
-## 作者信息 
+> Monk.Node 2.x 版本是一个颠覆和重构版本，采用全新的架构思想，引入了更多的Node.JS新特性，优化了核心，减少了依赖，实现了真正的惰性加载，支持npm，并针对Web开发做了大量的优化，包括路由、日志、异常、模型、数据库、模板引擎和验证等模块都已经重构，但绝对是新项目的首选（无论是WEB还是API开发）。
 
-- 原创作者：`百小僧` 
-- 开源协议：`MIT License`
-- 开发时间：`2016年12月06日`
-- 当前版本：`2.2.7`，2017年01月12日
-- 项目名称：`Monk.Node`
-- 版权所有：[百签软件（中山）有限公司](http://www.baisoft.org)
-- 联系方式：QQ群：`18863883`，作者QQ：`8020292`
-- 开发理念：`一切从简，只为了更懒`
-- 码云地址：[http://git.oschina.net/baisoft_org/Monk.Node](http://git.oschina.net/baisoft_org/Monk.Node)
-- Github ：[https://github.com/MonkSoul/Monk.Node](https://github.com/MonkSoul/Monk.Node)
+## 主要特性
 
-## 框架特点
+- 目录规范，代码清晰，极易入门
+- 基于 Node.JS 平台构建，Javascript 作为主要开发语言
+- 底层以 [Express.js](http://www.expressjs.com.cn/) 为基石，拓展性强，组件丰富
+- 采用主流的 MVC 思想编写，前后端解耦
+- 内置 Node.JS 平台下强大的 ORM 组件：[Sequelize.js](http://docs.sequelizejs.com/en/v3/)，支持目前主流的数据库操作
+- 集成 Web 开发所需的基本组件，无需手工添加
+- 支持 WebSocket 开发
+- 支持 RESTful API 开发
+- 支持 Redis 存储
+- 支持 Cors 跨域
+- 支持数据库模型自动构建
+- 支持有效防止 CSURF 攻击
+- 支持邮件发送
+- 支持定时任务
+- 支持验证码生成
 
-- 基于Node.js平台开发，Javascript作为主要编写语言
-- 极易入门，前后端开发者都能快速上手
-- 目录清晰，代码规范
-- 采用目前主流的MVC思想编写，并支持多区域，多站点开发（**这是Express 4.x 所没有的**）
-- 底层采用主流的Express.js 4.x Web框架进行开发，拓展性极强，第三方模块丰富，并完全兼容Express.js 4.x功能
-- 集成强大的Nodejs数据库ORM组件：Sequelize.js，支持目前所有主流数据库
-- 集成强大的ejs模板引擎
-- 支持强大的全局数据注入器（**类似ASP.NET MVC中的ViewData**）
-- 支持日志记录，日志输出
-- 支持多视图设置（**这是Express 4.x 所没有的**）
-- 支持跨域
-- 支持typescript编写
-- 支持Session，Cookies会话操作
-- 支持RESTful API开发
-- 支持过滤器，中间件，支持权限控制再也不是什么难题
-- 支持redis存储
-- 支持实时通信WebSocket开发，已集成主流的Socket.io模块
-- 支持文件上传
-- 支持数据库表模型生成工具
-- 支持开发、测试、生成环境数据库切换
-- 安全性高，防止CSURF攻击
-- 拓展性强，完美支持Node.js原生模块
-- 更多强大功能后续陆续集成
+Monk.Node 目前还在持续新增更多新特性，新功能，更多特性可持续关注项目更新。
+
+> Monk.Node 基于 Express.js 开发，但更优于 Express.js 本身提供的脚手架！—— 伟大的项目都是站在巨人的肩膀上的 * _* !
+
+## 作者信息
+
+- 原创作者：百小僧
+- 开源协议：MIT License
+- 开发时间：2016年12月06日
+- 当前版本：`2.2.8`，2017年01月24日
+- 项目名称：Monk.Node
+- 版权所有：[百签软件有限公司](htttp://www.baisoft.org)
+- 联系方式：QQ群：18863883，作者QQ：8020292
+- 开发理念：一切从简，只为了更懒
+- 码云地址：http://git.oschina.net/baisoft_org/Monk.Node
+- Github ：https://github.com/MonkSoul/Monk.Node
 
 ## 视频教程
 
@@ -74,6 +72,11 @@ Monk.Node：基于 Node.JS 一套 Web MVC 应用解决方案。
 ## 更新记录
 
 ```
+
+============ 2017.01.24 V2.2.8 ============
+
+- [更新] README.md 文档
+- [更新] package.json依赖模块
 
 ============ 2017.01.12 V2.2.7 ============
 

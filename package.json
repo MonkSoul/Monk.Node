@@ -1,58 +1,56 @@
 {
-  "name": "monk.node",
-  "version": "2.2.7",
-  "author": "百小僧",
-  "description": "Nodejs MVC 框架",
-  "keywords": [
-    "Monk.Node",
-    "Node.js MVC",
-    "Nodejs MVC",
-    "百小僧",
-    "Monk.Soul",
-    "MonkSoul",
-    "MonkNode"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "http://git.oschina.net/baisoft_org/Monk.Node"
-  },
-  "license": "MIT",
-  "contributors": [
-    {
-      "name": "百小僧",
-      "email": "8020292@qq.com"
+    "name": "monk.node",
+    "version": "2.2.8",
+    "author": "百小僧",
+    "description": "Nodejs MVC 框架",
+    "keywords": [
+        "Monk.Node",
+        "Node.js MVC",
+        "Nodejs MVC",
+        "百小僧",
+        "Monk.Soul",
+        "MonkSoul",
+        "MonkNode"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "http://git.oschina.net/baisoft_org/Monk.Node"
+    },
+    "license": "MIT",
+    "contributors": [{
+        "name": "百小僧",
+        "email": "8020292@qq.com"
+    }],
+    "scripts": {
+        "start": "node app"
+    },
+    "dependencies": {
+        "body-parser": "^1.16.0",
+        "connect-flash": "^0.1.1",
+        "cookie-parser": "^1.4.3",
+        "cors": "^2.8.1",
+        "csurf": "^1.9.0",
+        "debug": "^2.6.0",
+        "ejs": "^2.5.5",
+        "express": "^4.14.0",
+        "express-session": "^1.15.0",
+        "file-stream-rotator": "^0.0.7",
+        "images": "^3.0.0",
+        "lodash": "^4.17.4",
+        "morgan": "^1.7.0",
+        "multer": "^1.2.1",
+        "mysql": "^2.12.0",
+        "node-schedule": "^1.2.0",
+        "nodemailer": "^2.7.2",
+        "pg": "^6.1.2",
+        "pg-hstore": "^2.3.2",
+        "redis": "^2.6.3",
+        "sequelize": "^3.29.0",
+        "sequelize-auto": "^0.4.18",
+        "serve-favicon": "^2.3.2",
+        "socket.io": "^1.7.2",
+        "sqlite3": "^3.1.8",
+        "tedious": "^1.14.0",
+        "zengming": "^0.1.4"
     }
-  ],
-  "scripts": {
-    "start": "node app"
-  },
-  "dependencies": {
-    "body-parser": "^1.15.2",
-    "connect-flash": "^0.1.1",
-    "cookie-parser": "^1.4.3",
-    "cors": "^2.8.1",
-    "csurf": "^1.9.0",
-    "debug": "^2.6.0",
-    "ejs": "^2.5.5",
-    "express": "^4.14.0",
-    "express-session": "^1.14.2",
-    "file-stream-rotator": "^0.0.7",
-    "images": "^3.0.0",
-    "lodash": "^4.17.4",
-    "morgan": "^1.7.0",
-    "multer": "^1.2.1",
-    "mysql": "^2.12.0",
-    "node-schedule": "^1.2.0",
-    "nodemailer": "^2.7.0",
-    "pg": "^6.1.2",
-    "pg-hstore": "^2.3.2",
-    "redis": "^2.6.3",
-    "sequelize": "^3.29.0",
-    "sequelize-auto": "^0.4.18",
-    "serve-favicon": "^2.3.2",
-    "socket.io": "^1.7.2",
-    "sqlite3": "^3.1.8",
-    "tedious": "^1.14.0",
-    "zengming": "^0.1.4"
-  }
 }
