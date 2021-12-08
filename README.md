@@ -33,8 +33,6 @@ Monk.Node 目前还在持续新增更多新特性，新功能，更多特性可�
 - 开发时间：2016年12月06日
 - 当前版本：`2.2.9`，2017年02月06日
 - 项目名称：Monk.Node
-- 版权所有：[百签软件有限公司](http://www.baisoft.org)
-- 联系方式：QQ群：18863883，作者QQ：8020292
 - 开发理念：一切从简，只为了更懒
 - 码云地址：http://git.oschina.net/baisoft_org/Monk.Node
 - Github ：https://github.com/MonkSoul/Monk.Node
